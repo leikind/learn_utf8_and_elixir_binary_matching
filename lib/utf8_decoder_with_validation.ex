@@ -1,4 +1,4 @@
-defmodule UTF8DecoderValidation do
+defmodule Utf8DecoderValidation do
   @moduledoc false
 
   def utf8_to_codepoints(bitstring) do

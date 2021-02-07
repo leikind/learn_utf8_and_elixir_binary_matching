@@ -1,4 +1,4 @@
-defmodule UTF8DecoderValidationTest do
+defmodule UTF8DecodeUtf8Test do
   use ExUnit.Case, async: true
 
   @moduledoc """
@@ -19,22 +19,21 @@ defmodule UTF8DecoderValidationTest do
   """
 
   test "a UTF-8 encoded string to a list of codepoints, reimplement ?x " do
-    "hello" |> UTF8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
+    "hello" |> Utf8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
 
-    "heλλo" |> UTF8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
+    "heλλo" |> Utf8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
     # ?λ |> IO.inspect()
 
-    "heλლo" |> UTF8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
+    "heλლo" |> Utf8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
     # ?ლ |> IO.inspect()
-
-    "heλლo 💩" |> UTF8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
+    "heλლo 💩" |> Utf8Decoder.utf8_to_codepoints() |> IO.inspect(charlists: false)
     # ?💩 |> IO.inspect()
   end
 
   test "adding validation" do
     <<0b10111111, 0b10111111, 0b10111111>>
     # |> UTF8Decoder.utf8_to_codepoints()
-    |> UTF8DecoderValidation.utf8_to_codepoints()
+    |> Utf8DecoderValidation.utf8_to_codepoints()
     |> IO.inspect()
   end
 end
