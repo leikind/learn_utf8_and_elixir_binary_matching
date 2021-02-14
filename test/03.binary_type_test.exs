@@ -1,11 +1,16 @@
 defmodule BinaryTypeTest do
   use ExUnit.Case, async: true
 
-  test "a string is a binary" do
+  test "bitstring type" do
+    IO.inspect(<<0, 0x1, 0x10, 3>>)
+  end
+
+  test "a string in Elixir is also binary encoded as UTF-8" do
+    IO.inspect("hello")
     IO.inspect("hello", binaries: :as_binaries)
   end
 
-  test "binary type literal" do
+  test "if a binary is a valid UTF-8 sequence..." do
     IO.inspect(<<104, 101, 108, 108, 111>>)
   end
 
@@ -13,9 +18,15 @@ defmodule BinaryTypeTest do
     IO.inspect(<<"hello">>)
   end
 
-  test "you can build a binary with segments" do
+  test "you can build a binary with segments (1)" do
     <<"hel", "lo">> |> IO.inspect()
+  end
+
+  test "you can build a binary with segments (2)" do
     <<"hel", 108, 111>> |> IO.inspect()
+  end
+
+  test "you can build a binary with segments (3)" do
     <<"hel", 108, 0b1101111>> |> IO.inspect()
   end
 
@@ -26,7 +37,7 @@ defmodule BinaryTypeTest do
     IO.inspect(a <> b)
   end
 
-  test "breaking the abstraction of a UTF8 string by adding a null byte" do
+  test "make a UTF-8 encoded string invalid by adding a null byte" do
     "hello" |> IO.inspect()
     ("hello" <> <<0>>) |> IO.inspect()
   end
@@ -40,7 +51,7 @@ defmodule BinaryTypeTest do
       111::integer-size(8)>>
     |> IO.inspect()
 
-    <<12::unsigned-big-integer>> |> IO.inspect(base: :binary)
+    <<12::unsigned-integer>> |> IO.inspect(base: :binary)
   end
 
   test "every segment has a type and may have arguments (2)" do
@@ -50,24 +61,6 @@ defmodule BinaryTypeTest do
     <<"hello"::utf32>> |> IO.inspect(base: :binary)
   end
 
-  # Enter Unicode encodings!
-
-  test "Unicode encodings vs Unicode codepoints" do
-    [?h, ?e, ?l, ?l, ?o] |> IO.inspect(charlists: false)
-
-    <<"hello"::utf8>> |> IO.inspect(binaries: :as_binaries)
-    <<"hello"::utf16>> |> IO.inspect(binaries: :as_binaries)
-    <<"hello"::utf32>> |> IO.inspect(binaries: :as_binaries)
-  end
-
-  test "Unicode encodings vs Unicode codepoints (2)" do
-    [?L, ?λ, ?ლ, ?💩] |> IO.inspect(charlists: false)
-
-    <<"Lλლ💩"::utf8>> |> IO.inspect(binaries: :as_binaries)
-    <<"Lλლ💩"::utf16>> |> IO.inspect(binaries: :as_binaries)
-    <<"Lλლ💩"::utf32>> |> IO.inspect(binaries: :as_binaries)
-  end
-
   test "size and bitstrings: a bitstring is a contiguous sequence of bits in memory" do
     a = 5
     b = 17
@@ -75,11 +68,5 @@ defmodule BinaryTypeTest do
     IO.inspect(b, base: :binary)
 
     <<a::size(3), b::size(5)>> |> IO.inspect(base: :binary)
-  end
-
-  # A binary is a bitstring where the number of bits is divisible by 8.
-  # every binary is a bitstring, but not every bitstring is a binary.
-  test "a bitstring which is not a binary" do
-    <<0b11::size(2), 0b101::size(3)>> |> IO.inspect(base: :binary)
   end
 end

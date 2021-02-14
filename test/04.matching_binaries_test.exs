@@ -9,10 +9,12 @@ defmodule MatchingBinariesTest do
     IO.puts(second_byte)
   end
 
-  test "If you only want to match the first byte" do
+  test "If you only want to match the first byte (1)" do
     <<first_byte::size(8), _rest::bitstring>> = "λ"
     IO.puts(first_byte)
+  end
 
+  test "If you only want to match the first byte (2)" do
     byte_size("ლ") |> IO.puts()
     <<first_byte::size(8), _two_bytes_here::bitstring>> = "ლ"
 
@@ -26,15 +28,16 @@ defmodule MatchingBinariesTest do
     IO.inspect(rest, base: :binary)
   end
 
+  # === pre-Unicode age: 1 byte == 1 character
+  #
   # ASCII is from the pre-Unicode age when all characters had to fit in one byte
   # ASCII is punctuation and basic Latin characters
-  # ASCII is in the first half of all possible numbers in a byte
+  # ASCII is in the first half of all possible numbers in a byte beginning with 32 (0b100000)
+  # first half of the byte:
   # 0b00000001 -> 0b01111111
-  #          1 ->        127
-  # UTF8 is backwards compatible with characterss whose codepoint is less than 0b10000000
-  # In other words: characters in the range 0b00000001 -> 0b01111111 are encoded
-  # in UTF8 exactly like they were represented in the pre-Unicode one character == one byte
-  # epoch: codepoints become bytes
+  # ASCII:
+  # 0b00100000 -> 0b01111111
+  #         32 ->        127
 
   test "Detect ASCII" do
     is_ascii_char? = fn

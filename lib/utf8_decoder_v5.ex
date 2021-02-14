@@ -1,13 +1,13 @@
-defmodule Utf8DecoderValidation do
-  @moduledoc false
-
+defmodule Utf8DecoderV5 do
   def utf8_to_codepoints(bitstring) do
     with {:ok, codepoints} <- utf8_to_codepoints(bitstring, []) do
       Enum.reverse(codepoints)
     end
   end
 
-  def utf8_to_codepoints(<<>>, codepoints), do: {:ok, codepoints}
+  def utf8_to_codepoints(<<>>, codepoints) do
+    {:ok, codepoints}
+  end
 
   # 0xxxxxxx
   def utf8_to_codepoints(
@@ -55,5 +55,7 @@ defmodule Utf8DecoderValidation do
     utf8_to_codepoints(rest, new_codepoints)
   end
 
-  def utf8_to_codepoints(_, _), do: :not_utf8
+  def utf8_to_codepoints(_, _) do
+    :not_utf8
+  end
 end
